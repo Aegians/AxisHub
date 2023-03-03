@@ -1,8 +1,8 @@
 --[[
 
-	AirHub by Exunys © CC0 1.0 Universal (2023)
+	AxisHub by Aegians © MIT licensing agreement (2023)
 
-	https://github.com/Exunys
+	https://github.com/Aegians
 
 ]]
 
@@ -38,10 +38,10 @@ Library.UnloadCallback = function()
 end
 
 local MainFrame = Library:CreateWindow({
-	Name = "AirHub",
+	Name = "AxisHub",
 	Themeable = {
 		Image = "7059346386",
-		Info = "Made by Exunys\nPowered by Pepsi's UI Library",
+		Info = "Made by Aegians\nPowered by Pepsi's UI Library",
 		Credit = false
 	},
 	Background = "",
