@@ -1,6 +1,5 @@
 # AxisHub
-Universal Aimbot with built in ESP and Crosshair
-
+> Universal Aimbot with built in ESP and Crosshair
 
 
 
@@ -8,7 +7,7 @@ Any questions/issues you can message me at via my bio link.
  
  <s>ESP in beta</s> 
  
-
+---
 **Updates** 
 ~~~
 v1.3
@@ -23,3 +22,8 @@ v1.3
 May update UI Library in the near future,
 I plan on fixing the ESP and Aimbot to work on games such as Bad business, phantom forces, and Arsenal.
 ~~~
+---
+> Customization
+
+
+![image](https://user-images.githubusercontent.com/69432633/230424130-47917c38-9ea3-4e01-ac99-bcaab621834c.png)
