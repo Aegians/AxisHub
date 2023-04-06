@@ -8,8 +8,6 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/Aegians/AxisHub/main/
 
 Any questions/issues you can message me at via my bio link.
  
- <s>ESP in beta</s> 
- 
 ---
 **𝚄𝚙𝚍𝚊𝚝𝚎𝚜** 
 v1.3
