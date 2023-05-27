@@ -2,7 +2,7 @@
 > Universal Aimbot with built in ESP and Crosshair fully customizable
 
 ~~~
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Aegians/AxisHub/main/main.lua'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Aegians/AxisHub/main/AxisHub.lua'))()
 ~~~
 
 
