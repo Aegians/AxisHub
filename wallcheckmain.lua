@@ -1,6 +1,6 @@
 --[[
-
-	Wall Hack Module [AxisHub] by Aegians © CC0 1.0 Universal (2023)
+	REWROTE IT SINCE IT KINDA BROKE
+	Wall Hack Module [AxisHub] by Aegians
 
 	https://github.com/Aegians
 
