@@ -10,12 +10,14 @@ Any questions/issues you can message me at via my bio link.
  
 ---
 **𝚄𝚙𝚍𝚊𝚝𝚎𝚜** 
-v1.3
+v2 
+- Rewrote the damn thing, started to piss me off.
+  
 - Fixed ESP
 
-- Overhauled a bunch of shit for obfuscation; faster load time
+- Open Sourced it for peoples usage.
 
-- Adjusted TPS aimbot to work properly, smoothness 5 > too strong, smoothnes 1 > perfectly locks; may need to tweak it a bit to fit your adatpability. 
+- Third Person Shooter works now.
 ~~~~
 
 𝔉𝔲𝔱𝔲𝔯𝔢 𝔘𝔭𝔡𝔞𝔱𝔢𝔰
