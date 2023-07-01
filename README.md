@@ -1,8 +1,8 @@
 # AxisHub
-> Universal Aimbot with built in ESP and Crosshair fully customizable
+> Universal Aimbot with built-in ESP and Crosshair fully customizable
 
 ~~~
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Aegians/AxisHub/main/AxisHub.lua'))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Aegians/AxisHub/main/AxisHub.lua"))()
 ~~~
 
 
@@ -15,9 +15,9 @@ v2
   
 - Fixed ESP
 
-- Open Sourced it for peoples usage.
+- Open Sourced it for people's usage.
 
-- Third Person Shooter works now.
+- Third-Person Shooter works now.
 ~~~~
 
 𝔉𝔲𝔱𝔲𝔯𝔢 𝔘𝔭𝔡𝔞𝔱𝔢𝔰
