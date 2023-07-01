@@ -6,7 +6,7 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/Aegians/AxisHub/main/
 ~~~
 
 
-Any questions/issues you can message me at via my bio link.
+Any questions/issues open an issue. Pull requests can be made. This is for anyone to use and fully customize to their liking.
  
 ---
 **𝚄𝚙𝚍𝚊𝚝𝚎𝚜** 
@@ -21,9 +21,8 @@ v2
 ~~~~
 
 𝔉𝔲𝔱𝔲𝔯𝔢 𝔘𝔭𝔡𝔞𝔱𝔢𝔰
+gimme some ideas I suppose.
 
-May update UI Library in the near future,
-I plan on fixing the ESP and Aimbot to work on games such as Bad business & Phantom forces
 ~~~~
 
 ---
