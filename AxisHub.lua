@@ -20,8 +20,8 @@ getgenv().AxisHub = {}
 
 --// Load Modules
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Aegians/AxisHub/main/Modules/Aimbot.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Aegians/AxisHub/main/Modules/Wall%20Hack.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Aegians/AxisHub/main/Aimbot%20Module.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Aegians/AxisHub/main/Wall%20Check%20Module.lua"))()
 
 --// Variables
 
