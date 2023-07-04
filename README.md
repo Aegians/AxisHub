@@ -1,5 +1,6 @@
 # AxisHub
-> Universal Aimbot with built-in ESP and Crosshair fully customizable
+> Universal Aimbot with built-in Drawing Library ESP and Crosshair fully customizable
+> Streamable with executors that support Drawing Library
 
 ~~~
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Aegians/AxisHub/main/AxisHub.lua"))()
