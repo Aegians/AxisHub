@@ -16,5 +16,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Aegians/AxisHub/main/
 - Rewrote the ESP Module
 - Edited it for Roblox UWP
 - Added more checks for script executors that can't support certain modules
-- No longer used Pepsi's UI
+- No longer used Pepsi's UI, Switched to vozoid ui
 
