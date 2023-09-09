@@ -880,7 +880,7 @@ InformationSection:Button({
 	end
 })
 
-InformationSection:Label("Aegians Official "..os.date("%Y"))
+InformationSection:Label("Shiba helped >:D "..os.date("%Y"))
 
 InformationSection:Button({
 	Name = "Copy Socials",
