@@ -1124,7 +1124,7 @@ local themes = {
 		["Dropdown Option Background"] = Color3.fromRGB(19, 19, 23)
 	},
 
-	AirHub = {
+	AxisHub = {
 		["Accent"] = Color3.fromRGB(150, 100, 150),
 		["Window Background"] = Color3.fromRGB(35, 30, 35),
 		["Window Border"] = Color3.fromRGB(50, 45, 50),
@@ -1143,7 +1143,7 @@ local themes = {
 
 local themeobjects = {}
 
-local library = utility.table({theme = table.clone(themes.AirHub), folder = "AirHub V2", extension = "cfg", flags = {}, open = true, keybind = Enum.KeyCode.RightShift, mousestate = services.InputService.MouseIconEnabled, cursor = nil, holder = nil, connections = {}}, true)
+local library = utility.table({theme = table.clone(themes.AxisHub), folder = "AxisHub V2", extension = "cfg", flags = {}, open = true, keybind = Enum.KeyCode.RightShift, mousestate = services.InputService.MouseIconEnabled, cursor = nil, holder = nil, connections = {}}, true)
 local decode = (syn and syn.crypt.base64.decode) or (crypt and crypt.base64decode) or base64_decode
 library.gradient = decode("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABuSURBVChTxY9BDoAgDASLGD2ReOYNPsR/+BAfroI7hibe9OYmky2wbUPIOdsXdc1f9WMwppQm+SDGBnUvomAQBH49qzhFEag25869ElzaIXDhD4JGbyoEVxUedN8FKwnfmwhucgKICc+pNB1mZhdCdhsa2ky0FAAAAABJRU5ErkJggg==")
 library.utility = utility
@@ -1369,7 +1369,7 @@ function library:SetTheme(theme)
 end
 
 function library:GetThemes()
-	local themes = {"Default", "Midnight", "AirHub"}
+	local themes = {"Default", "Midnight", "AxisHub"}
 
 	local folderpath = string.format("%s//themes", self.folder)
 
@@ -2761,10 +2761,10 @@ end
 function library:Load(options)
 	options = options or {}
 	utility.table(options)
-	local name = "AirHub V2"
+	local name = "AxisHub V2"
 	local sizeX = options.sizex or 450
 	local sizeY = options.sizey or 500
-	local theme = options.theme and options.theme or "AirHub"
+	local theme = options.theme and options.theme or "AxisHub"
 	local overrides = options.themeoverrides or {}
 	local folder = options.folder
 	local extension = options.extension
