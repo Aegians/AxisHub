@@ -7,9 +7,13 @@ end
 --// Cache
 
 local game = game
-local loadstring, typeof, select, next = loadstring, typeof, select, next
+local loadstring, typeof, select, next, pcall = loadstring, typeof, select, next, pcall
 local tablefind, tablesort = table.find, table.sort
+local mathfloor = math.floor
 local stringgsub = string.gsub
+local wait, delay, spawn = task.wait, task.delay, task.spawn
+local osdate = os.date
+
 
 --// Launching
 
