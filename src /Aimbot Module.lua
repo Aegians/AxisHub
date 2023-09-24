@@ -1,13 +1,9 @@
---[[
-	https://github.com/Aegians
-]]
-
 --// Cache
 
 local game, workspace = game, workspace
 local getrawmetatable, getmetatable, setmetatable, pcall, getgenv, next, tick = getrawmetatable, getmetatable, setmetatable, pcall, getgenv, next, tick
-local Vector2new, CFramenew, Color3fromRGB, Color3fromHSV, Drawingnew, TweenInfonew = Vector2.new, CFrame.new, Color3.fromRGB, Color3.fromHSV, Drawing.new, TweenInfo.new
-local getupvalue, mousemoverel = debug.getupvalue, mousemoverel or (Input and Input.MouseMove)
+local Vector2new, Vector3new, Vector3zero, CFramenew, Color3fromRGB, Color3fromHSV, Drawingnew, TweenInfonew = Vector2.new, Vector3.new, Vector3.zero, CFrame.new, Color3.fromRGB, Color3.fromHSV, Drawing.new, TweenInfo.new
+local getupvalue, mousemoverel, tablefind, tableremove, stringlower, stringsub, mathclamp = debug.getupvalue, mousemoverel or (Input and Input.MouseMove), table.find, table.remove, string.lower, string.sub, math.clamp
 
 local GameMetatable = getrawmetatable(game)
 local __index = GameMetatable.__index
@@ -25,7 +21,9 @@ local Camera = __index(workspace, "CurrentCamera")
 
 local FindFirstChild, FindFirstChildOfClass = __index(game, "FindFirstChild"), __index(game, "FindFirstChildOfClass")
 local WorldToViewportPoint = __index(Camera, "WorldToViewportPoint")
+local GetPartsObscuringTarget = __index(Camera, "GetPartsObscuringTarget")
 local GetMouseLocation = __index(UserInputService, "GetMouseLocation")
+local GetPlayers = __index(Players, "GetPlayers")
 
 --// Variables
 
@@ -55,15 +53,13 @@ end
 
 --// Checking for multiple processes
 
-do
-	if AegiansDeveloperAimbot then
-		AegiansDeveloperAimbot:Exit()
-	end
+if AEGIANSDeveloperAimbot then
+	AEGIANSDeveloperAimbot:Exit()
 end
 
 --// Environment
 
-getgenv().AegiansDeveloperAimbot = {
+getgenv().AEGIANSDeveloperAimbot = {
 	DeveloperSettings = {
 		UpdateMode = "RenderStepped",
 		TeamCheckOption = "TeamColor",
@@ -76,6 +72,9 @@ getgenv().AegiansDeveloperAimbot = {
 		TeamCheck = false,
 		AliveCheck = true,
 		WallCheck = false,
+
+		OffsetToMoveDirection = false,
+		OffsetIncrement = 15,
 
 		Sensitivity = 0, -- Animation length (in seconds) before fully locking onto target
 		Sensitivity2 = 3, -- mousemoverel Sensitivity
@@ -105,14 +104,28 @@ getgenv().AegiansDeveloperAimbot = {
 		LockedColor = Color3fromRGB(255, 150, 150)
 	},
 
+	Blacklisted = {},
 	FOVCircle = Drawingnew("Circle"),
 	FOVCircleOutline = Drawingnew("Circle")
 }
 
-local Environment = getgenv().AegiansDeveloperAimbot
+local Environment = getgenv().AEGIANSDeveloperAimbot
 
 --// Core Functions
 
+local FixUsername = function(String)
+	local Result
+
+	for _, Value in next, GetPlayers(Players) do
+		local Name = __index(Value, "Name")
+
+		if stringsub(stringlower(Name), 1, #String) == stringlower(String) then
+			Result = Name
+		end
+	end
+
+	return Result
+end
 
 local GetRainbowColor = function()
 	local RainbowSpeed = Environment.DeveloperSettings.RainbowSpeed
@@ -130,7 +143,7 @@ local CancelLock = function()
 	local FOVCircle = UWP and Environment.FOVCircle or Environment.FOVCircle.__OBJECT
 
 	SetRenderProperty(FOVCircle, "Color", Environment.FOVSettings.Color)
-	__newindy(UserInputService, "MouseDeltaSensitivity", OriginalSensitivity)
+	__newindex(UserInputService, "MouseDeltaSensitivity", OriginalSensitivity)
 
 	if Animation then
 		Animation:Cancel()
@@ -144,11 +157,11 @@ local GetClosestPlayer = function()
 	if not Environment.Locked then
 		RequiredDistance = Environment.FOVSettings.Enabled and Environment.FOVSettings.Radius or 2000
 
-		for _, Value in next, Players.GetPlayers(Players) do
+		for _, Value in next, GetPlayers(Players) do
 			local Character = __index(Value, "Character")
 			local Humanoid = Character and FindFirstChildOfClass(Character, "Humanoid")
 
-			if Value ~= LocalPlayer and Character and FindFirstChild(Character, LockPart) and Humanoid then
+			if Value ~= LocalPlayer and not tablefind(Environment.Blacklisted, __index(Value, "Name")) and Character and FindFirstChild(Character, LockPart) and Humanoid then
 				local PartPosition, TeamCheckOption = __index(Character[LockPart], "Position"), Environment.DeveloperSettings.TeamCheckOption
 
 				if Settings.TeamCheck and __index(Value, TeamCheckOption) == __index(LocalPlayer, TeamCheckOption) then
@@ -159,7 +172,7 @@ local GetClosestPlayer = function()
 					continue
 				end
 
-				if Settings.WallCheck and #(Camera:GetPartsObscuringTarget({PartPosition}, Character:GetDescendants())) > 0 then
+				if Settings.WallCheck and #(GetPartsObscuringTarget(Camera, {PartPosition}, Character:GetDescendants())) > 0 then
 					continue
 				end
 
@@ -180,8 +193,8 @@ end
 local Load = function()
 	OriginalSensitivity = __index(UserInputService, "MouseDeltaSensitivity")
 
-	local Settings, FOVCircle, FOVCircleOutline, FOVSettings = Environment.Settings, Environment.FOVCircle, Environment.FOVCircleOutline, Environment.FOVSettings
-	local LockPart = Settings.LockPart
+	local Settings, FOVCircle, FOVCircleOutline, FOVSettings, Offset = Environment.Settings, Environment.FOVCircle, Environment.FOVCircleOutline, Environment.FOVSettings
+	local OffsetToMoveDirection, LockPart = Settings.OffsetToMoveDirection, Settings.LockPart
 
 	if not UWP then
 		FOVCircle, FOVCircleOutline = FOVCircle.__OBJECT, FOVCircleOutline.__OBJECT
@@ -217,9 +230,11 @@ local Load = function()
 		if Running and Settings.Enabled then
 			GetClosestPlayer()
 
+			Offset = OffsetToMoveDirection and __index(FindFirstChildOfClass(__index(Environment.Locked, "Character"), "Humanoid"), "MoveDirection") * (mathclamp(Settings.OffsetIncrement, 1, 30) / 10) or Vector3zero
+
 			if Environment.Locked then
 				local LockedPosition_Vector3 = __index(__index(Environment.Locked, "Character")[LockPart], "Position")
-				local LockedPosition = WorldToViewportPoint(Camera, LockedPosition_Vector3)
+				local LockedPosition = WorldToViewportPoint(Camera, LockedPosition_Vector3 + Offset)
 
 				if Environment.Settings.LockMode == 2 then
 					mousemoverel((LockedPosition.X - GetMouseLocation(UserInputService).X) * Settings.Sensitivity2, (LockedPosition.Y - GetMouseLocation(UserInputService).Y) * Settings.Sensitivity2)
@@ -228,7 +243,7 @@ local Load = function()
 						Animation = TweenService:Create(Camera, TweenInfonew(Environment.Settings.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFramenew(Camera.CFrame.Position, LockedPosition_Vector3)})
 						Animation:Play()
 					else
-						__newindex(Camera, "CFrame", CFramenew(Camera.CFrame.Position, LockedPosition_Vector3))
+						__newindex(Camera, "CFrame", CFramenew(Camera.CFrame.Position, LockedPosition_Vector3 + Offset))
 					end
 
 					__newindex(UserInputService, "MouseDeltaSensitivity", 0)
@@ -285,24 +300,52 @@ end)
 
 --// Functions
 
-function Environment.Exit(self) -- METHOD | AegiansDeveloperAimbot:Exit()
+function Environment.Exit(self) -- METHOD | AEGIANSDeveloperAimbot:Exit(<void>)
+	assert(self, "AEGIANS_AIMBOT-V3.Exit: Missing parameter #1 \"self\" <table>.")
+
 	for Index, _ in next, ServiceConnections do
 		Disconnect(ServiceConnections[Index])
 	end
 
-	Load = nil; ConvertVector = nil; CancelLock = nil; GetClosestPlayer = nil; GetRainbowColor = nil
+	Load = nil; ConvertVector = nil; CancelLock = nil; GetClosestPlayer = nil; GetRainbowColor = nil; FixUsername = nil
 
 	self.FOVCircle:Remove()
 	self.FOVCircleOutline:Remove()
-	getgenv().AegiansDeveloperAimbot = nil
+	getgenv().AEGIANSDeveloperAimbot = nil
 end
 
-function Environment.Restart() -- AegiansDeveloperAimbot.Restart()
+function Environment.Restart() -- AegiansDeveloperAimbot.Restart(<void>)
 	for Index, _ in next, ServiceConnections do
 		Disconnect(ServiceConnections[Index])
 	end
 
 	Load()
+end
+
+function Environment.Blacklist(self, Username) -- METHOD | AegiansDeveloperAimbot:Blacklist(<string> Player Name)
+	assert(self, "AEGIANS_AIMBOT-V3.Blacklist: Missing parameter #1 \"self\" <table>.")
+	assert(Username, "AEGIANS_AIMBOT-V3.Blacklist: Missing parameter #2 \"Username\" <string>.")
+
+	Username = FixUsername(Username)
+
+	assert(self, "AEGIANS_AIMBOT-V3.Blacklist: User "..Username.." couldn't be found.")
+
+	self.Blacklisted[#self.Blacklisted + 1] = Username
+end
+
+function Environment.Whitelist(self, Username) -- METHOD | AegiansDeveloperAimbot:Whitelist(<string> Player Name)
+	assert(self, "AEGIANS_AIMBOT-V3.Whitelist: Missing parameter #1 \"self\" <table>.")
+	assert(Username, "AEGIANS_AIMBOT-V3.Whitelist: Missing parameter #2 \"Username\" <string>.")
+
+	Username = FixUsername(Username)
+
+	assert(Username, "AEGIANS_AIMBOT-V3.Whitelist: User "..Username.." couldn't be found.")
+
+	local Index = tablefind(self.Blacklisted, Username)
+
+	assert(Index, "AEGIANS_AIMBOT-V3.Whitelist: User "..Username.." is not blacklisted.")
+
+	tableremove(self.Blacklisted, Index)
 end
 
 Environment.Load = Load -- AegiansDeveloperAimbot.Load()
