@@ -1,10 +1,12 @@
+--// Caching
+
 local game = game
-local assert, loadstring, select, next, type, typeof, pcall, xpcall, setmetatable, tick, warn = assert, loadstring, select, next, type, typeof, pcall, xpcall, setmetatable, tick, warn
+local assert, loadstring, select, next, type, typeof, pcall, xpcall, setmetatable, getmetatable, tick, warn = assert, loadstring, select, next, type, typeof, pcall, xpcall, setmetatable, getmetatable, tick, warn
 local mathfloor, mathabs, mathcos, mathsin, mathrad, mathdeg, mathmin, mathmax, mathclamp, mathrandom = math.floor, math.abs, math.cos, math.sin, math.rad, math.deg, math.min, math.max, math.clamp, math.random
 local stringformat, stringfind, stringchar = string.format, string.find, string.char
 local unpack = table.unpack
 local wait, spawn = task.wait, task.spawn
-local getgenv, getrawmetatable, gethiddenproperty = getgenv, getrawmetatable, gethiddenproperty
+local getgenv, getrawmetatable, getupvalue, gethiddenproperty = getgenv, getrawmetatable, debug.getupvalue, gethiddenproperty
 
 local ConfigLibrary = loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/Aegians/Config-Library/main/Main.lua"))()
 
@@ -59,15 +61,14 @@ local IsDescendantOf = function(self, ...)
 	return typeof(self) == "Instance" and self.IsDescendantOf(self, ...)
 end
 
-local GetRenderProperty, SetRenderProperty = function(Object, Property)
-	return Object[Property]
-end, function(Object, Property, Value)
-	Object[Property] = Value
-end
-
-local Connect, Disconnect = __index(game, "DescendantAdded").Connect
+local Connect, Disconnect, GetRenderProperty, SetRenderProperty = __index(game, "DescendantAdded").Connect
 
 do
+	local TemporaryDrawing = Drawingnew("Line")
+	GetRenderProperty = getupvalue(getmetatable(TemporaryDrawing).__index, 4)
+	SetRenderProperty = getupvalue(getmetatable(TemporaryDrawing).__newindex, 4)
+	TemporaryDrawing.Remove(TemporaryDrawing)
+
 	local TemporaryConnection = Connect(__index(game, "DescendantAdded"), function() end)
 	Disconnect = TemporaryConnection.Disconnect
 	Disconnect(TemporaryConnection)
@@ -77,10 +78,8 @@ local Inf, Nan, Loaded, CrosshairParts = 1 / 0, 0 / 0, false, {}
 
 --// Checking for multiple processes
 
-do
-	if AegiansDeveloperESP then
-		AegiansDeveloperESP:Exit()
-	end
+if AegiansDeveloperESP then
+	AegiansDeveloperESP:Exit()
 end
 
 --// Settings
@@ -114,7 +113,7 @@ getgenv().AegiansDeveloperESP = {
 
 			Color = Color3fromRGB(255, 255, 255),
 			Transparency = 1,
-			Size = 10,
+			Size = 14,
 			Font = DrawingFonts.System, -- UI, System, Plex, Monospace
 
 			OutlineColor = Color3fromRGB(0, 0, 0),
@@ -286,7 +285,7 @@ local CoreFunctions = {
 		local Result = ""
 
 		for _ = 1, Bits do
-			Result ..= ("AegiansDeveloperESP")[mathrandom(1, 2) == 1 and "upper" or "lower"](stringchar(mathrandom(97, 122)))
+			Result ..= ("Aegians_ESP")[mathrandom(1, 2) == 1 and "upper" or "lower"](stringchar(mathrandom(97, 122)))
 		end
 
 		return Result
@@ -326,11 +325,11 @@ local CoreFunctions = {
 		return BoxPosition, BoxSize, (TopOnScreen and BottomOnScreen)
 	end,
 
-	GetColor = function(Player, DefaultColor)
-		local Settings, TeamCheckOption = Environment.Settings, Environment.DeveloperSettings.TeamCheckOption
+    GetColor = function(Player, DefaultColor)
+        local Settings, TeamCheckOption = Environment.Settings, Environment.DeveloperSettings.TeamCheckOption
 
-		return Settings.EnableTeamColors and __index(Player, TeamCheckOption) == __index(LocalPlayer, TeamCheckOption) and Settings.TeamColor or DefaultColor
-	end
+        return Settings.EnableTeamColors and __index(Player, TeamCheckOption) == __index(LocalPlayer, TeamCheckOption) and Settings.TeamColor or DefaultColor
+    end
 }
 
 local UpdatingFunctions = {
@@ -629,19 +628,19 @@ local UpdatingFunctions = {
 
 		if not (ChamsEnabled and ESPEnabled and IsReady and _CFrame and PartSize and select(2, WorldToViewportPoint(_CFrame.Position))) then
 			for Index = 1, 6 do
-				SetRenderProperty(Cham["Quad"..Index], "Visible", false)
+				SetRenderProperty(Cham["Quad"..Index].__OBJECT, "Visible", false)
 			end
 
 			return
 		end
 
 		local Quads = {
-			Quad1Object = Cham.Quad1,
-			Quad2Object = Cham.Quad2,
-			Quad3Object = Cham.Quad3,
-			Quad4Object = Cham.Quad4,
-			Quad5Object = Cham.Quad5,
-			Quad6Object = Cham.Quad6
+			Quad1Object = Cham.Quad1.__OBJECT,
+			Quad2Object = Cham.Quad2.__OBJECT,
+			Quad3Object = Cham.Quad3.__OBJECT,
+			Quad4Object = Cham.Quad4.__OBJECT,
+			Quad5Object = Cham.Quad5.__OBJECT,
+			Quad6Object = Cham.Quad6.__OBJECT
 		}
 
 		for Index, Value in next, Settings do
@@ -741,13 +740,13 @@ local CreatingFunctions = {
 		local Settings = Environment.Properties.ESP
 
 		local TopText = Drawingnew("Text")
-		local TopTextObject = TopText
+		local TopTextObject = TopText.__OBJECT
 
 		SetRenderProperty(TopTextObject, "ZIndex", 4)
 		SetRenderProperty(TopTextObject, "Center", true)
 
 		local BottomText = Drawingnew("Text")
-		local BottomTextObject = BottomText
+		local BottomTextObject = BottomText.__OBJECT
 
 		SetRenderProperty(BottomTextObject, "ZIndex", 4)
 		SetRenderProperty(BottomTextObject, "Center", true)
@@ -786,12 +785,12 @@ local CreatingFunctions = {
 		local Settings = Environment.Properties.Tracer
 
 		local Tracer = Drawingnew("Line")
-		local TracerObject = Tracer
+		local TracerObject = Tracer.__OBJECT
 
 		SetRenderProperty(TracerObject, "ZIndex", -1)
 
 		local TracerOutline = Drawingnew("Line")
-		local TracerOutlineObject = TracerOutline
+		local TracerOutlineObject = TracerOutline.__OBJECT
 
 		SetRenderProperty(TracerObject, "ZIndex", 0)
 
@@ -835,12 +834,12 @@ local CreatingFunctions = {
 		local Settings = Environment.Properties.HeadDot
 
 		local Circle = Drawingnew("Circle")
-		local CircleObject = Circle
+		local CircleObject = Circle.__OBJECT
 
 		SetRenderProperty(CircleObject, "ZIndex", 2)
 
 		local CircleOutline = Drawingnew("Circle")
-		local CircleOutlineObject = CircleOutline
+		local CircleOutlineObject = CircleOutline.__OBJECT
 
 		SetRenderProperty(CircleOutlineObject, "ZIndex", 1)
 
@@ -878,12 +877,12 @@ local CreatingFunctions = {
 		local Settings = Environment.Properties.Box
 
 		local Box = Drawingnew("Square")
-		local BoxObject = Box
+		local BoxObject = Box.__OBJECT
 
 		SetRenderProperty(BoxObject, "ZIndex", 4)
 
 		local BoxOutline = Drawingnew("Square")
-		local BoxOutlineObject = BoxOutline
+		local BoxOutlineObject = BoxOutline.__OBJECT
 
 		SetRenderProperty(BoxOutlineObject, "ZIndex", 3)
 
@@ -927,12 +926,12 @@ local CreatingFunctions = {
 		local Settings = Environment.Properties.HealthBar
 
 		local Main = Drawingnew("Line")
-		local MainObject = Main
+		local MainObject = Main.__OBJECT
 
 		SetRenderProperty(MainObject, "ZIndex", 2)
 
 		local Outline = Drawingnew("Line")
-		local OutlineObject = Outline
+		local OutlineObject = Outline.__OBJECT
 
 		SetRenderProperty(OutlineObject, "ZIndex", 1)
 
@@ -1048,7 +1047,7 @@ local CreatingFunctions = {
 		local RenderObjects = {}
 
 		for Index, Value in next, CrosshairParts do
-			RenderObjects[Index] = Value
+			RenderObjects[Index] = Value.__OBJECT
 		end
 
 		for Index, Value in next, RenderObjects do
@@ -1214,7 +1213,7 @@ local CreatingFunctions = {
 				end
 			else
 				for _, RenderObject in next, CrosshairParts do
-					SetRenderProperty(RenderObject, "Visible", false)
+					SetRenderProperty(RenderObject.__OBJECT, "Visible", false)
 				end
 			end
 		end)
@@ -1313,7 +1312,7 @@ local UtilityFunctions = {
 	end,
 
 	WrapObject = function(self, Object, PseudoName, Allowed, RenderDistance)
-		assert(self, "AegiansDeveloperESP > UtilityFunctions.WrapObject - Internal error, unassigned parameter \"self\".")
+		assert(self, "AEGIANS_ESP > UtilityFunctions.WrapObject - Internal error, unassigned parameter \"self\".")
 
 		if pcall(gethiddenproperty, Object, "PrimaryPart") then
 			Object = __index(Object, "PrimaryPart")
@@ -1368,7 +1367,7 @@ local UtilityFunctions = {
 			if not pcall(function()
 				return __index(Entry.Object, "Position"), __index(Entry.Object, "CFrame")
 			end) then
-				warn("AegiansDeveloperESP > UtilityFunctions.WrapObject - Attempted to wrap object of an unsupported class type: \""..(__index(Entry.Object, "ClassName") or "N / A").."\"")
+				warn("Aegians_ESP > UtilityFunctions.WrapObject - Attempted to wrap object of an unsupported class type: \""..(__index(Entry.Object, "ClassName") or "N / A").."\"")
 				return self.UnwrapObject(Entry.Hash)
 			end
 
@@ -1415,7 +1414,7 @@ local UtilityFunctions = {
 				end
 
 				Recursive(Value.Visuals, function(_, _Value)
-					if type(_Value) == "table" and _Value then
+					if type(_Value) == "table" and _Value.__OBJECT then
 						pcall(_Value.Remove, _Value)
 					end
 				end)
@@ -1528,7 +1527,7 @@ Environment.UnwrapPlayers = function() -- (<void>) => <boolean> Success Status
 end
 
 Environment.UnwrapAll = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AegiansDeveloperESP.UnwrapAll: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.UnwrapAll: Missing parameter #1 \"self\" <table>.")
 
 	if self.UnwrapPlayers() and CrosshairParts.LeftLine then
 		self.RemoveCrosshair()
@@ -1538,7 +1537,7 @@ Environment.UnwrapAll = function(self) -- METHOD | (<void>) => <void>
 end
 
 Environment.Restart = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AegiansDeveloperESP.Restart: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.Restart: Missing parameter #1 \"self\" <table>.")
 
 	local Objects = {}
 
@@ -1561,7 +1560,7 @@ Environment.Restart = function(self) -- METHOD | (<void>) => <void>
 end
 
 Environment.Exit = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AegiansDeveloperESP.Exit: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.Exit: Missing parameter #1 \"self\" <table>.")
 
 	if self:UnwrapAll() then
 		for _, Connection in next, self.UtilityAssets.ServiceConnections do
@@ -1628,9 +1627,9 @@ Environment.Load = function() -- (<void>) => <void>
 end
 
 Environment.UpdateConfiguration = function(DeveloperSettings, Settings, Properties) -- (<table> DeveloperSettings, <table> Settings, <table> Properties) => <table> New Environment
-	assert(DeveloperSettings, "AegiansDeveloperESP.UpdateConfiguration: Missing parameter #1 \"DeveloperSettings\" <table>.")
-	assert(Settings, "AegiansDeveloperESP.UpdateConfiguration: Missing parameter #2 \"Settings\" <table>.")
-	assert(Properties, "AegiansDeveloperESP.UpdateConfiguration: Missing parameter #3 \"Properties\" <table>.")
+	assert(DeveloperSettings, "Aegians_ESP.UpdateConfiguration: Missing parameter #1 \"DeveloperSettings\" <table>.")
+	assert(Settings, "Aegians_ESP.UpdateConfiguration: Missing parameter #2 \"Settings\" <table>.")
+	assert(Properties, "Aegians_ESP.UpdateConfiguration: Missing parameter #3 \"Properties\" <table>.")
 
 	getgenv().AegiansDeveloperESP.DeveloperSettings = DeveloperSettings
 	getgenv().AegiansDeveloperESP.Settings = Settings
@@ -1642,7 +1641,7 @@ Environment.UpdateConfiguration = function(DeveloperSettings, Settings, Properti
 end
 
 Environment.LoadConfiguration = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AegiansDeveloperESP.LoadConfiguration: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.LoadConfiguration: Missing parameter #1 \"self\" <table>.")
 
 	local Path = self.DeveloperSettings.Path
 
@@ -1660,7 +1659,7 @@ Environment.LoadConfiguration = function(self) -- METHOD | (<void>) => <void>
 end
 
 Environment.SaveConfiguration = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AegiansDeveloperESP.SaveConfiguration: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.SaveConfiguration: Missing parameter #1 \"self\" <table>.")
 
 	local DeveloperSettings = self.DeveloperSettings
 
