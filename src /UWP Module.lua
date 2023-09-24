@@ -1,4 +1,4 @@
-Caching
+--// Caching
 
 local game = game
 local assert, loadstring, select, next, type, typeof, pcall, xpcall, setmetatable, tick, warn = assert, loadstring, select, next, type, typeof, pcall, xpcall, setmetatable, tick, warn
@@ -79,10 +79,8 @@ local Inf, Nan, Loaded, CrosshairParts = 1 / 0, 0 / 0, false, {}
 
 --// Checking for multiple processes
 
-do
-	if AegiansDeveloperESP then
-		AegiansDeveloperESP:Exit()
-	end
+if AegiansDeveloperESP then
+	AegiansDeveloperESP:Exit()
 end
 
 --// Settings
@@ -288,7 +286,7 @@ local CoreFunctions = {
 		local Result = ""
 
 		for _ = 1, Bits do
-			Result ..= ("AEGIANS_ESP")[mathrandom(1, 2) == 1 and "upper" or "lower"](stringchar(mathrandom(97, 122)))
+			Result ..= ("Aegians_ESP")[mathrandom(1, 2) == 1 and "upper" or "lower"](stringchar(mathrandom(97, 122)))
 		end
 
 		return Result
@@ -1315,7 +1313,7 @@ local UtilityFunctions = {
 	end,
 
 	WrapObject = function(self, Object, PseudoName, Allowed, RenderDistance)
-		assert(self, "AEGIANS_ESP > UtilityFunctions.WrapObject - Internal error, unassigned parameter \"self\".")
+		assert(self, "Aegians_ESP > UtilityFunctions.WrapObject - Internal error, unassigned parameter \"self\".")
 
 		if pcall(gethiddenproperty, Object, "PrimaryPart") then
 			Object = __index(Object, "PrimaryPart")
@@ -1370,7 +1368,7 @@ local UtilityFunctions = {
 			if not pcall(function()
 				return __index(Entry.Object, "Position"), __index(Entry.Object, "CFrame")
 			end) then
-				warn("AEGIANS_ESP > UtilityFunctions.WrapObject - Attempted to wrap object of an unsupported class type: \""..(__index(Entry.Object, "ClassName") or "N / A").."\"")
+				warn("Aegians_ESP > UtilityFunctions.WrapObject - Attempted to wrap object of an unsupported class type: \""..(__index(Entry.Object, "ClassName") or "N / A").."\"")
 				return self.UnwrapObject(Entry.Hash)
 			end
 
@@ -1530,7 +1528,7 @@ Environment.UnwrapPlayers = function() -- (<void>) => <boolean> Success Status
 end
 
 Environment.UnwrapAll = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AEGIANS_ESP.UnwrapAll: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.UnwrapAll: Missing parameter #1 \"self\" <table>.")
 
 	if self.UnwrapPlayers() and CrosshairParts.LeftLine then
 		self.RemoveCrosshair()
@@ -1540,7 +1538,7 @@ Environment.UnwrapAll = function(self) -- METHOD | (<void>) => <void>
 end
 
 Environment.Restart = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AEGIANS_ESP.Restart: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.Restart: Missing parameter #1 \"self\" <table>.")
 
 	local Objects = {}
 
@@ -1563,7 +1561,7 @@ Environment.Restart = function(self) -- METHOD | (<void>) => <void>
 end
 
 Environment.Exit = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AEGIANS_ESP.Exit: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.Exit: Missing parameter #1 \"self\" <table>.")
 
 	if self:UnwrapAll() then
 		for _, Connection in next, self.UtilityAssets.ServiceConnections do
@@ -1630,9 +1628,9 @@ Environment.Load = function() -- (<void>) => <void>
 end
 
 Environment.UpdateConfiguration = function(DeveloperSettings, Settings, Properties) -- (<table> DeveloperSettings, <table> Settings, <table> Properties) => <table> New Environment
-	assert(DeveloperSettings, "AEGIANS_ESP.UpdateConfiguration: Missing parameter #1 \"DeveloperSettings\" <table>.")
-	assert(Settings, "AEGIANS_ESP.UpdateConfiguration: Missing parameter #2 \"Settings\" <table>.")
-	assert(Properties, "AEGIANS_ESP.UpdateConfiguration: Missing parameter #3 \"Properties\" <table>.")
+	assert(DeveloperSettings, "Aegians_ESP.UpdateConfiguration: Missing parameter #1 \"DeveloperSettings\" <table>.")
+	assert(Settings, "Aegians_ESP.UpdateConfiguration: Missing parameter #2 \"Settings\" <table>.")
+	assert(Properties, "Aegians_ESP.UpdateConfiguration: Missing parameter #3 \"Properties\" <table>.")
 
 	getgenv().AegiansDeveloperESP.DeveloperSettings = DeveloperSettings
 	getgenv().AegiansDeveloperESP.Settings = Settings
@@ -1644,7 +1642,7 @@ Environment.UpdateConfiguration = function(DeveloperSettings, Settings, Properti
 end
 
 Environment.LoadConfiguration = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AEGIANS_ESP.LoadConfiguration: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.LoadConfiguration: Missing parameter #1 \"self\" <table>.")
 
 	local Path = self.DeveloperSettings.Path
 
@@ -1662,7 +1660,7 @@ Environment.LoadConfiguration = function(self) -- METHOD | (<void>) => <void>
 end
 
 Environment.SaveConfiguration = function(self) -- METHOD | (<void>) => <void>
-	assert(self, "AEGIANS_ESP.SaveConfiguration: Missing parameter #1 \"self\" <table>.")
+	assert(self, "Aegians_ESP.SaveConfiguration: Missing parameter #1 \"self\" <table>.")
 
 	local DeveloperSettings = self.DeveloperSettings
 
