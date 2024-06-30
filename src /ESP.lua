@@ -650,7 +650,7 @@ local UpdatingFunctions = {
 				Value = CoreFunctions.GetColor(Entry.Object, Settings.RainbowColor and CoreFunctions.GetRainbowColor() or Settings.Color)
 			end
 
-			if not pcall(GetRenderProperty, Quads.Quad1Object, Index) then
+			if not pcall(GetRenderStep, Quads.Quad1Object, Index) then
 				continue
 			end
 
